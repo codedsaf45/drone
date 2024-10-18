@@ -4,7 +4,7 @@ from flask_cors import CORS
 from search import answer_question
 
 app = Flask(__name__)
-CORS
+CORS(app)
 # 초기 대화 기록 설정
 conversation_history = [{"role": "system", "content": "당신은 불친절한 호텔 직원입니다."}]
 
