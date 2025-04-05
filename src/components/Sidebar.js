@@ -1,6 +1,4 @@
-/* global kakao */
 import React, { useState, useEffect } from "react";
-// import RenderMap from "./RenderMap";
 const regions = {
   "서울특별시": [
     "강남구",
@@ -243,7 +241,6 @@ const regions = {
   ],
   "제주특별자치도": ["서귀포시", "제주시"]
 };
-
 const Sidebar = ({ onCoordsChange }) => {
   const [selectedSido, setSelectedSido] = useState("");
   const [selectedGungu, setSelectedGungu] = useState("");
@@ -255,7 +252,7 @@ const Sidebar = ({ onCoordsChange }) => {
     if (selectedSido) {
       const options = regions[selectedSido];
       setGunguOptions(options);
-      // 기본으로 첫번째 값 선택
+      // 기본으로 첫 번째 값 선택
       setSelectedGungu(options[0] || "");
     } else {
       setGunguOptions([]);
@@ -281,17 +278,19 @@ const Sidebar = ({ onCoordsChange }) => {
       return;
     }
     setError("");
-    const kakao = window.kakao;
-    if (!kakao) {
-      setError("Kakao Maps API가 로드되지 않았습니다.");
+
+    if (!window.google) {
+      setError("Google Maps API가 로드되지 않았습니다.");
       return;
     }
-    const geocoder = new kakao.maps.services.Geocoder();
-    geocoder.addressSearch(address, (result, status) => {
-      if (status === kakao.maps.services.Status.OK) {
-        const lat = result[0].y;
-        const lng = result[0].x;
-        // 부모 컴포넌트에 좌표 전달
+
+    // Google Maps Geocoder를 이용해 주소 변환
+    const geocoder = new window.google.maps.Geocoder();
+    geocoder.geocode({ address }, (results, status) => {
+      if (status === window.google.maps.GeocoderStatus.OK) {
+        const location = results[0].geometry.location;
+        const lat = location.lat();
+        const lng = location.lng();
         onCoordsChange({ lat, lng });
         console.log("위도:", lat, "경도:", lng);
       } else {
@@ -300,6 +299,7 @@ const Sidebar = ({ onCoordsChange }) => {
       }
     });
   };
+
   return (
     <div className="w-86 bg-white border-r border-gray-200 p-4">
       <div className="mb-6">
@@ -336,7 +336,7 @@ const Sidebar = ({ onCoordsChange }) => {
           </select>
         </div>
       </div>
-       
+
       <div className="mx-">
         <button
           onClick={handleSearch}
@@ -345,7 +345,7 @@ const Sidebar = ({ onCoordsChange }) => {
           검색
         </button>
       </div>
-      
+
       {error && <p className="mt-4 text-red-500">{error}</p>}
     </div>
   );

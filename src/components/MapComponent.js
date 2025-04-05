@@ -5,32 +5,33 @@ const MapComponent = ({ coords }) => {
   const mapInstance = useRef(null);
 
   useEffect(() => {
-    const { kakao } = window;
-    if (!kakao || !mapRef.current) return;
+    if (!window.google || !mapRef.current) return;
 
-    const mapContainer = mapRef.current;
-    const mapOption = {
-      center: new kakao.maps.LatLng(37.29803324573562, 126.83879424585795),
-      level: 7,
+    // 초기 지도 옵션: coords가 없으면 기본 좌표를 사용합니다.
+    const defaultCenter = { lat: 37.29803324573562, lng: 126.83879424585795 };
+    const mapOptions = {
+      center: coords ? { lat: coords.lat, lng: coords.lng } : defaultCenter,
+      zoom: 11,
     };
-    const map = new kakao.maps.Map(mapContainer, mapOption);
-    // map 인스턴스를 ref에 저장합니다.
-    mapInstance.current = map;
 
-    // 기본 마커들 (예시)
+    // Google Map 인스턴스 생성
+    const map = new window.google.maps.Map(mapRef.current, mapOptions);
+    mapInstance.current = map;
+    
+    // 기본 마커 예시
     const positions = [
       {
         title: "처리중",
-        latlng: new kakao.maps.LatLng(37.498095, 127.02761),
+        latlng: { lat: 37.498095, lng: 127.02761 },
       },
       {
         title: "미완료",
-        latlng: new kakao.maps.LatLng(37.493923, 127.014656),
+        latlng: { lat: 37.493923, lng: 127.014656 },
       },
     ];
 
     positions.forEach((position) => {
-      new kakao.maps.Marker({
+      new window.google.maps.Marker({
         map,
         position: position.latlng,
         title: position.title,
@@ -42,17 +43,17 @@ const MapComponent = ({ coords }) => {
       .then((response) => response.json())
       .then((data) => {
         data.forEach((pothole) => {
-          const marker = new kakao.maps.Marker({
+          const marker = new window.google.maps.Marker({
             map,
-            position: new kakao.maps.LatLng(pothole.latitude, pothole.longitude),
+            position: { lat: pothole.latitude, lng: pothole.longitude },
             title: pothole.location,
           });
 
-          const infowindow = new kakao.maps.InfoWindow({
+          const infowindow = new window.google.maps.InfoWindow({
             content: `<div style="padding:5px;">위치: ${pothole.location}<br>상태: ${pothole.status}</div>`,
           });
 
-          kakao.maps.event.addListener(marker, "click", () => {
+          marker.addListener("click", () => {
             infowindow.open(map, marker);
           });
         });
@@ -60,11 +61,10 @@ const MapComponent = ({ coords }) => {
       .catch((error) => console.error("포트홀 정보 가져오기 실패:", error));
   }, []);
 
-  // 좌표 값이 변경될 때마다 지도 중심 업데이트
+  // coords가 변경되면 지도 중심 업데이트
   useEffect(() => {
     if (coords && mapInstance.current) {
-      const { kakao } = window;
-      mapInstance.current.setCenter(new kakao.maps.LatLng(coords.lat, coords.lng));
+      mapInstance.current.setCenter({ lat: coords.lat, lng: coords.lng });
     }
   }, [coords]);
 
