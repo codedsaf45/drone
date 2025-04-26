@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 const regions = {
-  "서울특별시": [
+  서울특별시: [
     "강남구",
     "강동구",
     "강북구",
@@ -25,9 +25,9 @@ const regions = {
     "은평구",
     "종로구",
     "중구",
-    "중랑구"
+    "중랑구",
   ],
-  "부산광역시": [
+  부산광역시: [
     "강서구",
     "금정구",
     "기장군",
@@ -43,9 +43,9 @@ const regions = {
     "연제구",
     "영도구",
     "중구",
-    "해운대구"
+    "해운대구",
   ],
-  "대구광역시": [
+  대구광역시: [
     "남구",
     "달서구",
     "달성군",
@@ -53,9 +53,9 @@ const regions = {
     "북구",
     "서구",
     "수성구",
-    "중구"
+    "중구",
   ],
-  "인천광역시": [
+  인천광역시: [
     "강화군",
     "계양구",
     "미추홀구",
@@ -64,13 +64,13 @@ const regions = {
     "부평구",
     "서구",
     "연수구",
-    "중구"
+    "중구",
   ],
-  "광주광역시": ["광산구", "남구", "동구", "북구", "서구"],
-  "대전광역시": ["대덕구", "동구", "서구", "유성구", "중구"],
-  "울산광역시": ["남구", "동구", "북구", "울주군", "중구"],
-  "세종특별자치시": ["세종특별자치시"],
-  "경기도": [
+  광주광역시: ["광산구", "남구", "동구", "북구", "서구"],
+  대전광역시: ["대덕구", "동구", "서구", "유성구", "중구"],
+  울산광역시: ["남구", "동구", "북구", "울주군", "중구"],
+  세종특별자치시: ["세종특별자치시"],
+  경기도: [
     "가평군",
     "고양시",
     "과천시",
@@ -101,9 +101,9 @@ const regions = {
     "평택시",
     "포천시",
     "하남시",
-    "화성시"
+    "화성시",
   ],
-  "강원도": [
+  강원도: [
     "강릉시",
     "고성군",
     "동해시",
@@ -121,9 +121,9 @@ const regions = {
     "평창군",
     "홍천군",
     "화천군",
-    "횡성군"
+    "횡성군",
   ],
-  "충청북도": [
+  충청북도: [
     "괴산군",
     "단양군",
     "보은군",
@@ -134,9 +134,9 @@ const regions = {
     "증평군",
     "진천군",
     "청주시",
-    "충주시"
+    "충주시",
   ],
-  "충청남도": [
+  충청남도: [
     "계룡시",
     "공주시",
     "금산군",
@@ -152,9 +152,9 @@ const regions = {
     "천안시",
     "청양군",
     "태안군",
-    "홍성군"
+    "홍성군",
   ],
-  "전라북도": [
+  전라북도: [
     "고창군",
     "군산시",
     "김제시",
@@ -168,9 +168,9 @@ const regions = {
     "장수군",
     "전주시",
     "정읍시",
-    "진안군"
+    "진안군",
   ],
-  "전라남도": [
+  전라남도: [
     "강진군",
     "고흥군",
     "곡성군",
@@ -192,9 +192,9 @@ const regions = {
     "진도군",
     "함평군",
     "해남군",
-    "화순군"
+    "화순군",
   ],
-  "경상북도": [
+  경상북도: [
     "경산시",
     "경주시",
     "고령군",
@@ -217,9 +217,9 @@ const regions = {
     "청도군",
     "청송군",
     "칠곡군",
-    "포항시"
+    "포항시",
   ],
-  "경상남도": [
+  경상남도: [
     "거제시",
     "거창군",
     "고성군",
@@ -237,9 +237,9 @@ const regions = {
     "하동군",
     "함안군",
     "함양군",
-    "합천군"
+    "합천군",
   ],
-  "제주특별자치도": ["서귀포시", "제주시"]
+  제주특별자치도: ["서귀포시", "제주시"],
 };
 const Sidebar = ({ onCoordsChange }) => {
   const [selectedSido, setSelectedSido] = useState("");
@@ -298,20 +298,32 @@ const Sidebar = ({ onCoordsChange }) => {
         console.error("주소 변환 실패", status);
       }
     });
+    fetch("http://localhost:3000/potholes").then((res) => {
+      if (!res.ok) throw new Error("API 응답 에러");
+      return res.json();
+    });
   };
 
   return (
-    <div className="w-86 bg-white border-r border-gray-200 p-4">
-      <div className="mb-6">
-        <div className="my-2">
-          <label htmlFor="sido">시/도: </label>
+    <aside className="p-6 bg-white rounded-lg shadow-lg w-72">
+      <h2 className="mb-5 text-2xl font-semibold text-gray-800">지역 선택</h2>
+      <div className="space-y-4">
+        <div>
+          <label
+            htmlFor="sido"
+            className="block mb-1 text-sm font-medium text-gray-700"
+          >
+            시/도 선택
+          </label>
           <select
             id="sido"
-            className="w-56"
             value={selectedSido}
-            onChange={handleSidoChange}
+            onChange={(e) => setSelectedSido(e.target.value)}
+            className="block w-full px-3 py-2 bg-white border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
           >
-            <option value="">시/도 선택</option>
+            <option value="" disabled>
+              -- 지역 선택 --
+            </option>
             {Object.keys(regions).map((sido) => (
               <option key={sido} value={sido}>
                 {sido}
@@ -319,15 +331,24 @@ const Sidebar = ({ onCoordsChange }) => {
             ))}
           </select>
         </div>
+
         <div>
-          <label htmlFor="gungu">군/구: </label>
+          <label
+            htmlFor="gungu"
+            className="block mb-1 text-sm font-medium text-gray-700"
+          >
+            군/구 선택
+          </label>
           <select
             id="gungu"
-            className="w-56"
             value={selectedGungu}
-            onChange={handleGunguChange}
+            onChange={(e) => setSelectedGungu(e.target.value)}
+            disabled={!gunguOptions.length}
+            className="block w-full px-3 py-2 bg-white border border-gray-300 rounded-md shadow-sm disabled:opacity-50 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
           >
-            <option value="">군/구 선택</option>
+            <option value="" disabled>
+              -- 세부 지역 --
+            </option>
             {gunguOptions.map((gungu) => (
               <option key={gungu} value={gungu}>
                 {gungu}
@@ -336,18 +357,33 @@ const Sidebar = ({ onCoordsChange }) => {
           </select>
         </div>
       </div>
-
-      <div className="mx-">
-        <button
-          onClick={handleSearch}
-          className="bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600 w-56 h-10 flex justify-center"
-        >
-          검색
-        </button>
-      </div>
-
-      {error && <p className="mt-4 text-red-500">{error}</p>}
-    </div>
+      <button
+        onClick={handleSearch}
+        className="w-full py-2 mt-6 font-medium text-center text-white transition-colors duration-200 bg-blue-600 rounded-md hover:bg-blue-700"
+      >
+        검색하기
+      </button>
+      {/* {error && (
+        <p className="mt-3 text-sm text-center text-red-500">{error}</p>
+      )}
+      <div className="mt-auto overflow-y-auto">
+        {0 === 0 ? (
+          <p className="text-center text-gray-500">조회된 포트홀이 없습니다.</p>
+        ) : (
+          <ul className="space-y-2">
+            {potholes.map((hole) => (
+              <li
+                key={hole.id}
+                className="p-2 rounded cursor-pointer bg-gray-50 hover:bg-gray-100"
+              >
+                <p className="font-medium">{hole.location}</p>
+                <p className="text-sm text-gray-600">상태: {hole.status}</p>
+              </li>
+            ))}
+          </ul>
+        )}
+      </div> */}
+    </aside>
   );
 };
 

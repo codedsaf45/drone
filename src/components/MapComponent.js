@@ -17,26 +17,26 @@ const MapComponent = ({ coords }) => {
     // Google Map 인스턴스 생성
     const map = new window.google.maps.Map(mapRef.current, mapOptions);
     mapInstance.current = map;
-    
-    // 기본 마커 예시
-    const positions = [
-      {
-        title: "처리중",
-        latlng: { lat: 37.498095, lng: 127.02761 },
-      },
-      {
-        title: "미완료",
-        latlng: { lat: 37.493923, lng: 127.014656 },
-      },
-    ];
 
-    positions.forEach((position) => {
-      new window.google.maps.Marker({
-        map,
-        position: position.latlng,
-        title: position.title,
-      });
-    });
+    // // 기본 마커 예시
+    // const positions = [
+    //   {
+    //     title: "처리중",
+    //     latlng: { lat: 37.498095, lng: 127.02761 },
+    //   },
+    //   {
+    //     title: "미완료",
+    //     latlng: { lat: 37.493923, lng: 127.014656 },
+    //   },
+    // ];
+
+    // positions.forEach((position) => {
+    //   new window.google.maps.Marker({
+    //     map,
+    //     position: position.latlng,
+    //     title: position.title,
+    //   });
+    // });
 
     // 백엔드에서 포트홀 데이터를 가져와 마커 생성
     fetch("http://localhost:3000/potholes")
@@ -53,9 +53,7 @@ const MapComponent = ({ coords }) => {
             content: `<div style="padding:5px;">위치: ${pothole.location}<br>상태: ${pothole.status}</div>`,
           });
 
-          marker.addListener("click", () => {
-            infowindow.open(map, marker);
-          });
+          marker.addListener("click", () => {});
         });
       })
       .catch((error) => console.error("포트홀 정보 가져오기 실패:", error));

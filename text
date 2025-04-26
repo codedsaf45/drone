@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>포트홀 지도</title>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+      rel="stylesheet"
+    />
+    <link
+      href="https://ai-public.creatie.ai/gen_page/tailwind-custom.css"
+      rel="stylesheet"
+    />
+    <script src="https://cdn.tailwindcss.com/3.4.5?plugins=forms@0.5.7,typography@0.5.13,aspect-ratio@0.4.2,container-queries@0.1.1"></script>
+    <script
+      src="https://ai-public.creatie.ai/gen_page/tailwind-config.min.js"
+      data-color="#000000"
+      data-border-radius="small"
+    ></script>
+    <script
+      type="text/javascript"
+      src="//dapi.kakao.com/v2/maps/sdk.js?appkey=YOUR_APP_KEY"
+    ></script>
+  </head>
+  <body class="font-sans bg-gray-50">
+    <div class="flex flex-col min-h-screen">
+      <nav class="bg-white shadow-sm">
+        <div class="px-4 mx-auto max-w-8xl sm:px-6 lg:px-8">
+          <div class="flex justify-between h-16">
+            <div class="flex">
+              <div class="flex items-center flex-shrink-0">
+                <img
+                  class="w-auto h-8"
+                  src="https://ai-public.creatie.ai/gen_page/logo_placeholder.png"
+                  alt="포트홀 관리 시스템"
+                />
+              </div>
+              <div class="hidden sm:ml-6 sm:flex sm:space-x-8">
+                <a
+                  href="#"
+                  class="inline-flex items-center px-1 pt-1 text-sm font-medium border-b-2 border-custom text-custom"
+                >
+                  지도
+                </a>
+                <a
+                  href="#"
+                  class="inline-flex items-center px-1 pt-1 text-sm font-medium text-gray-500 border-b-2 border-transparent hover:text-gray-700"
+                >
+                  통계
+                </a>
+                <a
+                  href="#"
+                  class="inline-flex items-center px-1 pt-1 text-sm font-medium text-gray-500 border-b-2 border-transparent hover:text-gray-700"
+                >
+                  신고하기
+                </a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </nav>
+
+      <div class="flex flex-1">
+        <div class="flex flex-col bg-white border-r border-gray-200 w-80">
+          <div class="px-4 py-5">
+            <div class="relative">
+              <input
+                type="text"
+                class="w-full py-2 pl-10 pr-4 border border-gray-300 rounded-md focus:ring-custom focus:border-custom"
+                placeholder="지역 검색"
+              />
+              <div
+                class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none"
+              >
+                <i class="text-gray-400 fas fa-search"></i>
+              </div>
+            </div>
+
+            <div class="mt-4">
+              <h3 class="text-sm font-medium text-gray-500">필터</h3>
+              <div class="mt-2 space-y-2">
+                <label class="flex items-center">
+                  <input
+                    type="checkbox"
+                    class="border-gray-300 rounded text-custom focus:ring-custom"
+                    checked
+                  />
+                  <span class="ml-2 text-sm text-gray-700">미처리</span>
+                </label>
+                <label class="flex items-center">
+                  <input
+                    type="checkbox"
+                    class="border-gray-300 rounded text-custom focus:ring-custom"
+                  />
+                  <span class="ml-2 text-sm text-gray-700">처리중</span>
+                </label>
+                <label class="flex items-center">
+                  <input
+                    type="checkbox"
+                    class="border-gray-300 rounded text-custom focus:ring-custom"
+                  />
+                  <span class="ml-2 text-sm text-gray-700">처리완료</span>
+                </label>
+              </div>
+            </div>
+
+            <div class="mt-6">
+              <h3 class="text-sm font-medium text-gray-500">기간 설정</h3>
+              <div class="mt-2 space-y-2">
+                <input
+                  type="date"
+                  class="w-full border border-gray-300 rounded-md focus:ring-custom focus:border-custom"
+                />
+              </div>
+            </div>
+          </div>
+
+          <div class="flex-1 px-4 py-5 overflow-y-auto">
+            <div class="space-y-4">
+              <div
+                class="p-4 bg-white border border-gray-200 rounded-lg shadow-sm cursor-pointer hover:border-custom"
+              >
+                <div class="flex items-start justify-between">
+                  <div>
+                    <h4 class="text-sm font-medium text-gray-900">
+                      강남구 테헤란로
+                    </h4>
+                    <p class="mt-1 text-xs text-gray-500">발견일: 2024-02-20</p>
+                  </div>
+                  <span
+                    class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-red-100 text-red-800"
+                  >
+                    미처리
+                  </span>
+                </div>
+              </div>
+
+              <div
+                class="p-4 bg-white border border-gray-200 rounded-lg shadow-sm cursor-pointer hover:border-custom"
+              >
+                <div class="flex items-start justify-between">
+                  <div>
+                    <h4 class="text-sm font-medium text-gray-900">
+                      서초구 서초대로
+                    </h4>
+                    <p class="mt-1 text-xs text-gray-500">발견일: 2024-02-19</p>
+                  </div>
+                  <span
+                    class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-yellow-100 text-yellow-800"
+                  >
+                    처리중
+                  </span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="flex flex-col flex-1">
+          <div id="map" class="flex-1"></div>
+
+          <div class="p-4 bg-white border-t border-gray-200">
+            <div class="flex items-center justify-between">
+              <div>
+                <h3 class="text-lg font-medium text-gray-900">
+                  포트홀 상세 정보
+                </h3>
+                <p class="mt-1 text-sm text-gray-500">
+                  선택된 포트홀의 상세 정보를 확인하실 수 있습니다.
+                </p>
+              </div>
+              <button
+                type="button"
+                class="!rounded-button inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-custom hover:bg-custom/90 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-custom"
+              >
+                신고하기
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      var container = document.getElementById("map");
+      var options = {
+        center: new kakao.maps.LatLng(37.5665, 126.978),
+        level: 3,
+      };
+      var map = new kakao.maps.Map(container, options);
+    </script>
+  </body>
+</html>
