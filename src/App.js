@@ -1,13 +1,27 @@
 // App.js
 import React, { useState } from "react";
 import { Routes, Route } from "react-router-dom";
-
+import { useEffect } from "react";
 import MainPage from "./pages/MainPage";
 import Navbar from "./components/Navbar";
 import Sidebar from "./components/Sidebar";
 import MapComponent from "./components/MapComponent";
 import Admin from "./pages/Admin";
 function App() {
+  const [potholes, setPotholes] = useState([]);
+  useEffect(() => {
+    fetch("http://localhost:3000/potholes")
+      .then((r) => r.json())
+      .then((data) => setPotholes(data))
+      .catch(console.error);
+  }, []);
+  const [potholesToday, setPotholesToday] = useState([]);
+  useEffect(() => {
+    fetch("http://localhost:3000/potholes/today")
+      .then((r) => r.json())
+      .then((data) => setPotholesToday(data.count))
+      .catch(console.error);
+  }, []);
   const [coords, setCoords] = useState(null);
 
   return (
@@ -22,9 +36,9 @@ function App() {
           <div className="flex flex-col min-h-screen">
             <Navbar />
             <div className="flex flex-1">
-              <Sidebar onCoordsChange={setCoords} />
+              <Sidebar potholesToday = {potholesToday} onCoordsChange={setCoords} />
               <div className="relative flex-1">
-                <MapComponent coords={coords} />
+                <MapComponent coords={coords} potholes={potholes} />
                 {/* 확대/축소/현재위치 버튼 */}
                 <div className="absolute bg-white rounded-lg shadow left-4 top-14">
                   <button className="!rounded-button p-2 hover:bg-gray-100">

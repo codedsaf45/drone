@@ -1,7 +1,7 @@
 // src/components/MainPage.jsx
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import PasswordModal from "/home/park/map/src/components/PasswordModal.js";
+import PasswordModal from "/home/park/ws/map/src/components/PasswordModal.js";
 
 const MainPage = () => {
   const navigate = useNavigate();
@@ -39,11 +39,11 @@ const MainPage = () => {
       <header className="pt-16">
         <div className="px-4 py-6 mx-auto max-w-8xl">
           <div className="flex justify-center">
-            <img
+            {/* <img
               src="https://ai-public.creatie.ai/gen_page/logo_placeholder.png"
               alt="로고"
               className="h-12"
-            />
+            /> */}
           </div>
         </div>
       </header>

@@ -1,78 +1,99 @@
 import React, { useEffect, useRef } from "react";
 
-const MapComponent = ({ coords }) => {
-  const mapRef = useRef(null);
-  const mapInstance = useRef(null);
+export default function RoadRiskMap({ coords, potholes = [] }) {
+  const mapDivRef    = useRef(null);
+  const mapRef       = useRef(null);
+  const heatmapRef   = useRef(null);
+  const markersRef   = useRef([]);
 
-  useEffect(() => {
-    if (!window.google || !mapRef.current) return;
-
-    // 초기 지도 옵션: coords가 없으면 기본 좌표를 사용합니다.
-    const defaultCenter = { lat: 37.29803324573562, lng: 126.83879424585795 };
-    const mapOptions = {
-      center: coords ? { lat: coords.lat, lng: coords.lng } : defaultCenter,
-      zoom: 11,
-    };
-
-    // Google Map 인스턴스 생성
-    const map = new window.google.maps.Map(mapRef.current, mapOptions);
-    mapInstance.current = map;
-
-    // // 기본 마커 예시
-    // const positions = [
-    //   {
-    //     title: "처리중",
-    //     latlng: { lat: 37.498095, lng: 127.02761 },
-    //   },
-    //   {
-    //     title: "미완료",
-    //     latlng: { lat: 37.493923, lng: 127.014656 },
-    //   },
-    // ];
-
-    // positions.forEach((position) => {
-    //   new window.google.maps.Marker({
-    //     map,
-    //     position: position.latlng,
-    //     title: position.title,
-    //   });
-    // });
-
-    // 백엔드에서 포트홀 데이터를 가져와 마커 생성
-    fetch("http://localhost:3000/potholes")
-      .then((response) => response.json())
-      .then((data) => {
-        data.forEach((pothole) => {
-          const marker = new window.google.maps.Marker({
-            map,
-            position: { lat: pothole.latitude, lng: pothole.longitude },
-            title: pothole.location,
-          });
-
-          const infowindow = new window.google.maps.InfoWindow({
-            content: `<div style="padding:5px;">위치: ${pothole.location}<br>상태: ${pothole.status}</div>`,
-          });
-
-          marker.addListener("click", () => {});
-        });
-      })
-      .catch((error) => console.error("포트홀 정보 가져오기 실패:", error));
-  }, []);
-
-  // coords가 변경되면 지도 중심 업데이트
-  useEffect(() => {
-    if (coords && mapInstance.current) {
-      mapInstance.current.setCenter({ lat: coords.lat, lng: coords.lng });
+  // 0~1 값(risk)을 HSL 색상으로 변환하는 헬퍼
+  const riskToColor = (risk) => {
+    if (risk < 0.2) {
+      return 'green';
+    } else if (risk < 0.4) {
+      return 'yellow';
+    } else {
+      return 'red';
     }
-  }, [coords]);
+  };
+
+  useEffect(() => {
+    if (!window.google || !mapDivRef.current) return;
+
+    // 1) 지도 초기화 (한 번만)
+    if (!mapRef.current) {
+      mapRef.current = new window.google.maps.Map(mapDivRef.current, {
+        center: coords || { lat: 37.5665, lng: 126.9780 },
+        zoom: 11,
+        mapTypeId: "roadmap",
+      });
+    }
+    const map = mapRef.current;
+
+    // 2) Data Layer 초기화 후 GeoJSON 로드
+    map.data.forEach((f) => map.data.remove(f));
+    map.data.loadGeoJson("http://localhost:3000/roads", null, (features) => {
+      console.log("로드된 도로 피처 수:", features.length);
+    });
+
+    // 3) 심각도(risk)에 따라 동적 스타일링
+    map.data.setStyle((feature) => {
+      const risk = feature.getProperty("risk") ?? 0;
+      return {
+        strokeColor: riskToColor(risk),
+        strokeWeight: 2,
+        zIndex: Math.round(risk * 100),
+      };
+    });
+
+    // 4) 기존 마커 제거
+    markersRef.current.forEach((marker) => marker.setMap(null));
+    markersRef.current = [];
+
+    // 5) 포트홀 마커 추가
+    potholes.forEach((p) => {
+      const marker = new window.google.maps.Marker({
+        position: { lat: p.latitude, lng: p.longitude },
+        map,
+        title: `${p.description} (Severity: ${p.severity})`,
+        icon: {
+          path: window.google.maps.SymbolPath.CIRCLE,
+          scale: 6,
+          fillColor: riskToColor(p.severity / 5),
+          fillOpacity: 0.8,
+          strokeColor: '#000',
+          strokeWeight: 1,
+        },
+      });
+      // 클릭 시 InfoWindow 표시
+      const infoWindow = new window.google.maps.InfoWindow({
+        content: `<div><strong>${p.description}</strong><br/>위치: ${p.latitude}, ${p.longitude}<br/>심각도: ${p.severity}</div>`,
+      });
+      marker.addListener('click', () => infoWindow.open(map, marker));
+      markersRef.current.push(marker);
+    });
+
+    // 6) 포트홀 히트맵 (원하면 주석 해제)
+    // if (potholes.length) {
+    //   const heatData = potholes.map((p) => ({
+    //     location: new window.google.maps.LatLng(p.latitude, p.longitude),
+    //     weight:   p.severity,
+    //   }));
+    //   heatmapRef.current?.setMap(null);
+    //   heatmapRef.current = new window.google.maps.visualization.HeatmapLayer({
+    //     data:    heatData,
+    //     map,
+    //     radius:  28,
+    //     opacity: 0.5,
+    //   });
+    // }
+  }, [coords, potholes]);
 
   return (
     <div
-      ref={mapRef}
+      ref={mapDivRef}
       style={{ width: "100%", height: "100%" }}
       className="absolute inset-0"
     />
   );
-};
-
-export default MapComponent;
+}

@@ -1,4 +1,5 @@
-import React, { useState, useEffect } from "react";
+import React, { useRef, useState, useEffect } from "react";
+
 const regions = {
   서울특별시: [
     "강남구",
@@ -284,7 +285,6 @@ const Sidebar = ({ onCoordsChange }) => {
       return;
     }
 
-    // Google Maps Geocoder를 이용해 주소 변환
     const geocoder = new window.google.maps.Geocoder();
     geocoder.geocode({ address }, (results, status) => {
       if (status === window.google.maps.GeocoderStatus.OK) {
@@ -363,6 +363,23 @@ const Sidebar = ({ onCoordsChange }) => {
       >
         검색하기
       </button>
+      <div>
+        {/* <h3 class="text-lg font-medium text-gray-900">통계</h3> */}
+        <div class="mt-2 space-y-2">
+          <div class="bg-gray-50 p-3 rounded">
+            <div class="text-sm text-gray-500">전체 포트홀</div>
+            <div class="text-2xl font-bold text-custom">247</div>
+          </div>
+          <div class="bg-gray-50 p-3 rounded">
+            <div class="text-sm text-gray-500">오늘 발견</div>
+            <div class="text-2xl font-bold text-custom">123</div>
+          </div>
+          <div class="bg-gray-50 p-3 rounded">
+            <div class="text-sm text-gray-500">처리 완료</div>
+            <div class="text-2xl font-bold text-green-600">189</div>
+          </div>
+        </div>
+      </div>
       {/* {error && (
         <p className="mt-3 text-sm text-center text-red-500">{error}</p>
       )}

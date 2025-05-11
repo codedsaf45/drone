@@ -1,6 +1,6 @@
 // src/components/VideoMapLayout.jsx
 import React, { useState, useEffect } from "react";
-import MapComponent from "/home/park/map/src/components/MapComponent.js";
+import MapComponent from "/home/park/ws/map/src/components/MapComponent.js"
 
 const VideoMapLayout = ({ videoSrc }) => {
   const [coords, setCoords] = useState(null);

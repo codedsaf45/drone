@@ -4,7 +4,7 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>포트홀 지도</title>
-    <!-- 구글 폰트, Font Awesome, Tailwind CSS 등 외부 리소스 로드 -->
+    <!-- 구글 폰트, Font Awesome, Tailwind CSS -->
     <link
       href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700&display=swap"
       rel="stylesheet"
@@ -14,12 +14,16 @@
       rel="stylesheet"
     />
     <script src="https://cdn.tailwindcss.com/3.4.5"></script>
-    <!-- Google Maps API 스크립트 -->
+
+    <!-- ⚠️ Google Maps API: callback 제거, libraries=visualization 포함, async+defer -->
     <script
-      src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBNFVPS9fDKf_5YXtz40uqLmkS_HtPG7y8"
+      async
+      defer
+      src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBNFVPS9fDKf_5YXtz40uqLmkS_HtPG7y8&libraries=visualization,places"
     ></script>
   </head>
   <body>
     <div id="root"></div>
   </body>
 </html>
+
