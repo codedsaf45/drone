@@ -242,7 +242,7 @@ const regions = {
   ],
   제주특별자치도: ["서귀포시", "제주시"],
 };
-const Sidebar = ({ onCoordsChange }) => {
+const Sidebar = ({ onCoordsChange, onRegionChange, potholes }) => {
   const [selectedSido, setSelectedSido] = useState("");
   const [selectedGungu, setSelectedGungu] = useState("");
   const [gunguOptions, setGunguOptions] = useState([]);
@@ -279,6 +279,8 @@ const Sidebar = ({ onCoordsChange }) => {
       return;
     }
     setError("");
+    onRegionChange(address);
+    console.log("전달되는 주소:", address);
 
     if (!window.google) {
       setError("Google Maps API가 로드되지 않았습니다.");
@@ -298,16 +300,16 @@ const Sidebar = ({ onCoordsChange }) => {
         console.error("주소 변환 실패", status);
       }
     });
-    fetch("http://localhost:3000/potholes").then((res) => {
-      if (!res.ok) throw new Error("API 응답 에러");
-      return res.json();
-    });
   };
+  const sortedPotholes = Array.isArray(potholes)
+    ? [...potholes].sort((a, b) => b.severity - a.severity)
+    : [];
 
   return (
-    <aside className="p-6 bg-white rounded-lg shadow-lg w-72">
+    <aside className="h-screen p-6 overflow-y-auto bg-white rounded-lg shadow-lg w-72">
       <h2 className="mb-5 text-2xl font-semibold text-gray-800">지역 선택</h2>
       <div className="space-y-4">
+        {/* 시/도 select */}
         <div>
           <label
             htmlFor="sido"
@@ -319,7 +321,7 @@ const Sidebar = ({ onCoordsChange }) => {
             id="sido"
             value={selectedSido}
             onChange={(e) => setSelectedSido(e.target.value)}
-            className="block w-full px-3 py-2 bg-white border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+            className="w-full px-3 py-2 text-sm border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500"
           >
             <option value="" disabled>
               -- 지역 선택 --
@@ -332,6 +334,7 @@ const Sidebar = ({ onCoordsChange }) => {
           </select>
         </div>
 
+        {/* 군/구 select */}
         <div>
           <label
             htmlFor="gungu"
@@ -344,7 +347,7 @@ const Sidebar = ({ onCoordsChange }) => {
             value={selectedGungu}
             onChange={(e) => setSelectedGungu(e.target.value)}
             disabled={!gunguOptions.length}
-            className="block w-full px-3 py-2 bg-white border border-gray-300 rounded-md shadow-sm disabled:opacity-50 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+            className="w-full px-3 py-2 text-sm border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500"
           >
             <option value="" disabled>
               -- 세부 지역 --
@@ -357,49 +360,54 @@ const Sidebar = ({ onCoordsChange }) => {
           </select>
         </div>
       </div>
+
       <button
         onClick={handleSearch}
-        className="w-full py-2 mt-6 font-medium text-center text-white transition-colors duration-200 bg-blue-600 rounded-md hover:bg-blue-700"
+        className="w-full py-2 mt-4 font-semibold text-white bg-blue-600 rounded-md hover:bg-blue-700"
       >
         검색하기
       </button>
-      <div>
-        {/* <h3 class="text-lg font-medium text-gray-900">통계</h3> */}
-        <div class="mt-2 space-y-2">
-          <div class="bg-gray-50 p-3 rounded">
-            <div class="text-sm text-gray-500">전체 포트홀</div>
-            <div class="text-2xl font-bold text-custom">247</div>
-          </div>
-          <div class="bg-gray-50 p-3 rounded">
-            <div class="text-sm text-gray-500">오늘 발견</div>
-            <div class="text-2xl font-bold text-custom">123</div>
-          </div>
-          <div class="bg-gray-50 p-3 rounded">
-            <div class="text-sm text-gray-500">처리 완료</div>
-            <div class="text-2xl font-bold text-green-600">189</div>
-          </div>
-        </div>
-      </div>
-      {/* {error && (
-        <p className="mt-3 text-sm text-center text-red-500">{error}</p>
-      )}
-      <div className="mt-auto overflow-y-auto">
-        {0 === 0 ? (
-          <p className="text-center text-gray-500">조회된 포트홀이 없습니다.</p>
-        ) : (
-          <ul className="space-y-2">
-            {potholes.map((hole) => (
+
+      <div className="pt-4 mt-6 overflow-y-auto border-t">
+        <h3 className="mb-2 text-base font-medium tracking-tight text-gray-700">
+          포트홀 목록
+        </h3>
+        {sortedPotholes.length > 0 ? (
+          <ul className="space-y-3">
+            {sortedPotholes.map((hole, index) => (
               <li
-                key={hole.id}
-                className="p-2 rounded cursor-pointer bg-gray-50 hover:bg-gray-100"
+                key={index}
+                className="p-4 transition border rounded-lg shadow-sm hover:shadow"
               >
-                <p className="font-medium">{hole.location}</p>
-                <p className="text-sm text-gray-600">상태: {hole.status}</p>
+                <div className="flex items-center justify-between">
+                  <div>
+                    <h4 className="font-semibold">{hole.description}</h4>
+                    <p className="text-sm text-gray-500">
+                      {hole.latitude}, {hole.longitude}
+                    </p>
+                  </div>
+                  <span
+                    className={`text-xs font-bold px-2 py-1 rounded 
+                        ${
+                          hole.severity >= 4
+                            ? "bg-red-100 text-red-600"
+                            : hole.severity === 3
+                            ? "bg-yellow-100 text-yellow-600"
+                            : "bg-green-100 text-green-600"
+                        }`}
+                  >
+                    심각도 {hole.severity}
+                  </span>
+                </div>
               </li>
             ))}
           </ul>
+        ) : (
+          <p className="text-sm text-center text-gray-500">
+            포트홀 데이터가 없습니다.
+          </p>
         )}
-      </div> */}
+      </div>
     </aside>
   );
 };

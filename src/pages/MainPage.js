@@ -1,7 +1,7 @@
 // src/components/MainPage.jsx
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import PasswordModal from "/home/park/ws/map/src/components/PasswordModal.js";
+import PasswordModal from "/home/park/map_2/map/src/components/PasswordModal.js";
 
 const MainPage = () => {
   const navigate = useNavigate();
@@ -19,7 +19,7 @@ const MainPage = () => {
   return (
     <div className="flex flex-col min-h-screen bg-gray-50">
       {/* 알림 바 */}
-      <div className="fixed top-0 left-0 right-0 z-10 border-b border-yellow-200 bg-yellow-50">
+      {/* <div className="fixed top-0 left-0 right-0 z-10 border-b border-yellow-200 bg-yellow-50">
         <div className="px-4 py-3 mx-auto max-w-8xl">
           <div className="flex items-center justify-between">
             <div className="flex items-center">
@@ -33,17 +33,13 @@ const MainPage = () => {
             </button>
           </div>
         </div>
-      </div>
+      </div> */}
 
       {/* 헤더 */}
       <header className="pt-16">
         <div className="px-4 py-6 mx-auto max-w-8xl">
           <div className="flex justify-center">
-            {/* <img
-              src="https://ai-public.creatie.ai/gen_page/logo_placeholder.png"
-              alt="로고"
-              className="h-12"
-            /> */}
+            <img src="logo.png" alt="로고" className="h-24" />
           </div>
         </div>
       </header>
