@@ -81,14 +81,9 @@ WSGI_APPLICATION = 'config.wsgi.application'
 # 📁 your_project/settings.py (예: back/settings.py)
 
 DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.mysql',  # ✅ 백엔드 설정 (MySQL)
-        'NAME': 'pothole_db',                  # 데이터베이스 이름
-        'USER': 'root',             # MySQL 사용자
-        'PASSWORD': 'red79166',     # MySQL 비밀번호
-        'HOST': 'localhost',                   # 또는 IP 주소
-        'PORT': '3306',                        # MySQL 기본 포트
-    }
+       'default': {
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': BASE_DIR / "db.sqlite3",}
 }
 
 

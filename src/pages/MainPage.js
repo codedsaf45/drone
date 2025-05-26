@@ -1,7 +1,8 @@
 // src/components/MainPage.jsx
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import PasswordModal from "/home/park/map_2/map/src/components/PasswordModal.js";
+
+import PasswordModal from '../components/PasswordModal';
 
 const MainPage = () => {
   const navigate = useNavigate();

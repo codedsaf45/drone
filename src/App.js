@@ -1,4 +1,3 @@
-// App.js
 import React, { useState } from "react";
 import { Routes, Route } from "react-router-dom";
 import { useEffect } from "react";
@@ -38,7 +37,7 @@ function App() {
 
   const [potholesToday, setPotholesToday] = useState([]);
   useEffect(() => {
-    fetch("http://localhost:8000/api/today")
+    fetch("http://127.0.0.1:8000/api/potholes/count/today")
       .then((r) => r.json())
       .then((data) => setPotholesToday(data.count))
       .catch(console.error);
@@ -54,7 +53,7 @@ function App() {
         path="/user"
         element={
           <div className="flex flex-col h-screen">
-            <Navbar />
+            <Navbar today={potholesToday}/>
             <div className="flex flex-1 overflow-hidden">
               {" "}
               {/* 중요! */}
@@ -99,7 +98,7 @@ function App() {
         path="/admin"
         element={
           <div className="flex flex-col min-h-screen">
-            <Navbar />
+            <Navbar today={potholesToday}/>
             <Admin
               coords={coords}
               potholes={potholes}

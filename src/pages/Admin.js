@@ -1,6 +1,6 @@
 // src/components/VideoMapLayout.jsx
 import React, { useState, useEffect, useRef } from "react";
-import MapComponent from "/home/park/map_2/map/src/components/MapComponent.js"; // 상대 경로로 수정
+import MapComponent from '../components/MapComponent';
 
 const VideoMapLayout = ({ potholes = [], showHeatmap = false }) => {
   const mapRef = useRef(null);

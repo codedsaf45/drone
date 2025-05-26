@@ -5,9 +5,9 @@ const handleReport = () => {
 };
 const total = 10;
 const done = 100;
-const today = 100;
+// const today = 100;
 
-const Navbar = () => {
+const Navbar = ({today}) => {
   return (
     <nav className="bg-white border-b border-gray-200 shadow-sm ">
       <div className="px-4 mx-auto max-w-8xl sm:px-6 lg:px-8">
@@ -22,7 +22,7 @@ const Navbar = () => {
               <div className="flex gap-6 text-sm font-medium text-gray-600">
                 <div>
                   전체 포트홀{" "}
-                  <span className="font-bold text-gray-900">{total}</span>
+                  <span className="font-bold text-gray-900">{today}</span>
                 </div>
                 <div>
                   오늘 발견{" "}

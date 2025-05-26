@@ -6,7 +6,7 @@ import os
 
 BASE_DIR = os.path.dirname(os.path.dirname(__file__))
 ROADS_PATH = os.path.join(BASE_DIR, "data", "ansan_roads_centerline.geojson")
-print(ROADS_PATH)
+# print(ROADS_PATH)
 
 def compute_road_risk():
     # 1. 도로 GeoJSON 로드

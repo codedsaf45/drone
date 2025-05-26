@@ -31,7 +31,7 @@ app = Flask(__name__)
 CORS(app)
 
 # YOLO 모델 로드
-model = YOLO("/media/park/T7/mydatanew/runs/detect/train2/weights/best.pt")
+model = YOLO("best.pt")
 
 # Tesseract 경로 설정
 pytesseract.pytesseract.tesseract_cmd = "/usr/bin/tesseract"
